@@ -67,3 +67,8 @@ The following table lists the configurable parameters of the Cloudwatch Exporter
 | `servicemonitor.prometheus_release_name`                |  Release name of the kube-prometheus stack                                                                     | `eu-west-1
 | `servicemonitor.namespace`                | Prometheus operator namespace on                                                                   | `eu-west-1
 | `exporter.port`                | Exposed port value on                                                                   | `9877
+
+
+# TODO
+* Helm Operator for the loki (on premise usage)
+* ElasticSearch and Humio Support
