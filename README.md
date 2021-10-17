@@ -49,6 +49,29 @@ You can populate the helm chart values like that.
 
 * Soprano does not creates any prometheus rules for the alerting purposes you can set your prometheus rules according to the your query definitions.
 
+* You can use soprano via aws EC2 IAM Profile but in kubernetes side you are able to annotate your service Account to  access AWS via well defined Roles.
+
+- Example Role Definition:
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+        "Sid": "LogGroupRetention",
+        "Effect": "Allow",
+        "Action": [
+            "logs:Get*",
+            "logs:Describe*",
+            "logs:StartQuery",
+            "logs:StopQuery",
+            "logs:GetQueryResults",
+            "cloudwathc:Get*"
+        ]
+        "Resource": "arn:aws:logs:REGION:ACCOUNT_ID:log-group:LOG-GROUP-NAME"
+      }
+  ]
+}
+```
 
 ### Helm Chart Values Table:
 
@@ -67,6 +90,7 @@ The following table lists the configurable parameters of the Cloudwatch Exporter
 | `servicemonitor.prometheus_release_name`                |  Release name of the kube-prometheus stack                                                                     | `eu-west-1
 | `servicemonitor.namespace`                | Prometheus operator namespace on                                                                   | `eu-west-1
 | `exporter.port`                | Exposed port value on                                                                   | `9877
+| `serviceAccount.annotations`                | Annocations for the IRSA usage or generic purpose staff on                                                                   | `eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/ROLE-FOR-SOPRANO"
 
 
 # TODO
