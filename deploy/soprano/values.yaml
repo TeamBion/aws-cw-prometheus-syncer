@@ -1,0 +1,83 @@
+# Default values for eks-clouwatch-auditer.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+
+image:
+  repository: emirozbir/eks-cloudwatch-audit
+  pullPolicy: Always
+  tag: "release-2"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+eks:
+  region: eu-west-1
+  log_group_name: /aws/eks/test-cluster/cluster
+
+notification:
+  webhook_url: "WEBHOOK_URL"
+  send_to_slack: "TRUE"
+
+servicemonitor:
+  prometheus_release_name: development-prometheus
+  namespace: monitoring
+  
+  
+exporter:
+  port: "9877"
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+    add:
+      - NET_BIND_SERVICE
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+queries:
+    #non-kubectl-access : fields @message, @userAgent | filter userAgent not like /kube/ | filter userAgent not like /go/ |filter userAgent not like /Prometheus/ | sort @timestamp desc | limit 1
+    four-zero-three-results : fields @timestamp, @message| filter responseStatus.code == "403"| sort @timestamp desc| limit 1
+    forbidden-decisions : fields @timestamp, @message| filter annotations.authorization.k8s.io/decision == "forbid"| sort @timestamp desc| limit 1
+    forbidden-users : fields @timestamp, @message| filter user.username == "forbid"| sort @timestamp desc| limit 1
+    exec-attemptions : fields @timestamp, @message| filter objectRef.subresource == "exec"| sort @timestamp desc| limit 1

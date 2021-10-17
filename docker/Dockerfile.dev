@@ -1,0 +1,5 @@
+FROM python:slim-buster
+WORKDIR /opt/eks-cloudwatch-audit
+COPY requirements.txt .
+COPY src/ src/
+RUN pip3 install -r requirements.txt

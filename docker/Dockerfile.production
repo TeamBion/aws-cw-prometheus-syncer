@@ -1,0 +1,11 @@
+FROM python:3.7.12-slim-bullseye as builder
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt
+
+FROM gcr.io/distroless/python3
+WORKDIR /opt/eks-cloudwatch-audit
+COPY requirements.txt .
+COPY src/ src/
+COPY --from=builder /usr/local/lib/python3.7/site-packages /usr/lib/python3/dist-packages
+COPY --from=builder /usr/local/lib/python3.7/site-packages /usr/local/lib/python3.7/dist-packages
+COPY --from=builder /usr/local/lib/python3.7/site-packages /usr/lib/python3.7/dist-packages

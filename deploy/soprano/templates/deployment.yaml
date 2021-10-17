@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "soprano.fullname" . }}
+  labels:
+    {{- include "soprano.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "soprano.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "soprano.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "soprano.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["python3", "/opt/eks-cloudwatch-audit/src/main.py"]
+          env:
+            - name: LOG_GROUP_NAME
+              value: {{.Values.eks.log_group_name}}
+            - name: CLUSTER_NAME
+              value: {{.Values.eks.cluster_name}}
+            - name: AWS_DEFAULT_REGION
+              value: {{.Values.eks.region}}
+            - name: EXPORTER_PORT
+              value: "{{.Values.exporter.port}}"
+            - name: WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "soprano.fullname" . }}-secret
+                  key: webhook_url
+            - name: SEND_TO_SLACK
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "soprano.fullname" . }}-secret
+                  key: send_to_slack
+          ports:
+            - name: http
+              containerPort: {{.Values.exporter.port}}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+          - name: query-volume
+            mountPath: /opt/query/queries.yaml
+            subPath: queries.yaml
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: query-volume
+        configMap:
+          name: {{ include "soprano.fullname" . }}-configmap
+          items:
+          - key: queries.yaml
+            path: queries.yaml
