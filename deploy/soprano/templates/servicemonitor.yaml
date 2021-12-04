@@ -4,7 +4,7 @@ kind: ServiceMonitor
 metadata:
   labels:
     release: {{.Values.servicemonitor.prometheus_release_name}}
-  name: audit-cluster-{{ include "soprano.fullname" . }}
+  name: {{.Values.servicemonitor.prometheus_release_name}}-{{ include "soprano.fullname" . }}
   namespace: {{.Values.servicemonitor.namespace}}
 spec:
   endpoints:
