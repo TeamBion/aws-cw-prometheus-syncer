@@ -43,16 +43,6 @@ spec:
               value: {{.Values.eks.region}}
             - name: EXPORTER_PORT
               value: "{{.Values.exporter.port}}"
-            - name: WEBHOOK_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "soprano.fullname" . }}-secret
-                  key: webhook_url
-            - name: SEND_TO_SLACK
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "soprano.fullname" . }}-secret
-                  key: send_to_slack
           ports:
             - name: http
               containerPort: {{.Values.exporter.port}}

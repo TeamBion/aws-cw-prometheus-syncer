@@ -5,7 +5,6 @@ import logging
 from prometheus_client import start_http_server, Gauge
 from insights_queries.parsers import Parser
 from insights_queries.query import QueryRunner
-from notifier.notify import Notify
 
 class AuditMetrics:
     """Class of audit class"""
@@ -17,7 +16,6 @@ class AuditMetrics:
         self.log_group_name = "{}".format(log_group_name)
         self.parser = Parser()
         self.query_map = self.parser.parse_query_list()
-        self.is_notify = os.environ["SEND_TO_SLACK"]
 
     def run_metrics_loop(self):
         """Metric query runner loop"""
@@ -45,14 +43,8 @@ class AuditMetrics:
                 logging.warning("Metric value {}".format(metric_map[metric[0]]))
                 logging.warning("Metric or Message has to produced by this tool")
 
-                if self.is_notify == "TRUE":
-                    notifyObj = Notify()
-                    notifyObj._webhook_url = os.environ["WEBHOOK_URL"]
-                    notifyObj.send_message(content=metric_map[metric[0]], metric_key=metric[0])
-                else:
-                    pass
             else:
-                logging.warning("Nothing to notify for the metric {}".format(metric))
+                logging.warning("Nothing to produce as a metric {}".format(metric))
 
             self.audit_values.labels(audit_metric_type=metric[0]).set(metric_map[metric[0]])
 

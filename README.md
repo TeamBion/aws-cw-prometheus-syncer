@@ -85,8 +85,6 @@ The following table lists the configurable parameters of the Cloudwatch Exporter
 | `image.repository`                | Image                                                                   | `emirozbir/soprano
 | `eks.region`                | The aws region where you are working                                                                    | `eu-west-1
 | `eks.log_group_name`                | Log group address to work on                                                                    | `/aws/eks/test-cluster/cluster
-| `notification.webhook_url`                | The Slack webhook URL                                                                    | ``
-| `notification.send_to_slack`                | Send slack message or not                                                                    | `TRUE|FALSE
 | `servicemonitor.prometheus_release_name`                |  Release name of the kube-prometheus stack                                                                     | `eu-west-1
 | `servicemonitor.namespace`                | Prometheus operator namespace on                                                                   | `eu-west-1
 | `exporter.port`                | Exposed port value on                                                                   | `9877
