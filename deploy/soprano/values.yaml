@@ -18,7 +18,7 @@ serviceAccount:
   create: true
   # Annotations to add to the service account
   annotations:
-    eks.amazonaws.com/role-arn: ROLE_ARN 
+    eks.amazonaws.com/role-arn: ROLE_ARN
     
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
@@ -79,3 +79,5 @@ queries:
     forbidden-decisions : fields @timestamp, @message| filter annotations.authorization.k8s.io/decision == "forbid"| sort @timestamp desc| limit 1
     forbidden-users : fields @timestamp, @message| filter user.username == "forbid"| sort @timestamp desc| limit 1
     exec-attemptions : fields @timestamp, @message| filter objectRef.subresource == "exec"| sort @timestamp desc| limit 1
+    namespace-delete : fields @timestamp, @message| filter requestObject.kind == "Namespace"| filter verb=="delete"| filter responseObject.status.conditions.2.message=="testimtest"| sort @timestamp desc| limit 1
+    

@@ -54,8 +54,8 @@ def main():
     logging.info("Exporter started")
 
     exporter_port = int(os.getenv("EXPORTER_PORT", "9877"))
-    log_group_name=os.environ.get("LOG_GROUP_NAME" ,"") ## /aws/eks/eu-test/cluster
-    region=os.environ.get("AWS_DEFAULT_REGION", "eu-central-1")
+    log_group_name=os.environ.get("LOG_GROUP_NAME" ,"/aws/eks/eu-test/cluster") ## 
+    region=os.environ.get("AWS_DEFAULT_REGION", "eu-west-1")
     interval_time_period=os.environ.get("INTERVAL_TIME_PERIOD", 10)
 
     app_metrics = AuditMetrics(
