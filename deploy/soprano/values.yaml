@@ -26,11 +26,7 @@ serviceAccount:
 eks:
   region: eu-west-1
   log_group_name: /aws/eks/test-cluster/cluster
-
-notification:
-  webhook_url: "WEBHOOK_URL"
-  send_to_slack: "TRUE"
-
+  
 servicemonitor:
   prometheus_release_name: development-prometheus
   namespace: monitoring
