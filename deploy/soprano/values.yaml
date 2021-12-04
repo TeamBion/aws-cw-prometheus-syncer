@@ -4,11 +4,10 @@
 
 replicaCount: 1
 
-
 image:
   repository: emirozbir/eks-cloudwatch-audit
   pullPolicy: Always
-  tag: "release-2"
+  tag: "prod"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -18,17 +17,20 @@ serviceAccount:
   # Specifies whether a service account should be created
   create: true
   # Annotations to add to the service account
-  annotations: {}
+  annotations:
+    eks.amazonaws.com/role-arn: ROLE_ARN 
+    
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
-
+# fields @timestamp, @message| filter responseStatus.code == "403"| sort @timestamp desc| limit 1
 eks:
   region: eu-west-1
   log_group_name: /aws/eks/test-cluster/cluster
-  
+
 servicemonitor:
-  prometheus_release_name: development-prometheus
+  create: true
+  prometheus_release_name: audit-cluster
   namespace: monitoring
   
   

@@ -1,9 +1,10 @@
+{{- if .Values.servicemonitor.create -}}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
     release: {{.Values.servicemonitor.prometheus_release_name}}
-  name: development-prometheus-kub-{{ include "soprano.fullname" . }}
+  name: audit-cluster-{{ include "soprano.fullname" . }}
   namespace: {{.Values.servicemonitor.namespace}}
 spec:
   endpoints:
@@ -15,3 +16,4 @@ spec:
   selector:
     matchLabels:
       {{- include "soprano.labels" . | nindent 8 }}
+{{- end }}
