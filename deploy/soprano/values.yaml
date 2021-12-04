@@ -18,7 +18,7 @@ serviceAccount:
   create: true
   # Annotations to add to the service account
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::130575395405:role/eksctl-test-cluster-addon-iamserviceaccount-Role1-W53ELRE1PT8P 
+    eks.amazonaws.com/role-arn: ROLE_ARN
     
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
