@@ -43,6 +43,8 @@ spec:
               value: {{.Values.eks.region}}
             - name: EXPORTER_PORT
               value: "{{.Values.exporter.port}}"
+            - name: METRIC_PREFIX
+              value: "{{.Values.metric_prefix}}"
           ports:
             - name: http
               containerPort: {{.Values.exporter.port}}

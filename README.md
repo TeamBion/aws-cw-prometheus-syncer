@@ -1,17 +1,16 @@
 [![Pylint Status](https://app.travis-ci.com/WoodProgrammer/eks-cloudwatch-audit.svg?branch=hot_fix_1)](https://app.travis-ci.com/WoodProgrammer/soprano)
 
-# Soprano - Log based alert generator
+# Cloudwatch Insight Prometheus Exporter
 
 <img src="./img/logo.png"></img>
 
-Soprano is a metric generator according to the output of the cloudwatch Insight queries results.
-It collects the outputs from AWS CLoudwatch Insights.
+This is a project that is responsible to create Prometheus metrics according to the given cloudwatch metrics.
 
 Let's check the overall architecture diagram at below;
 
 <img src="./img/soprano.png"></img>
 
-Soprano expose an endpoint for the prometheus, with that way you are able to expose log based metrics according to the your queries.
+The `/metrics` endpoint expose the metrics according to the prefix and cloudwatch logs.
 
 Example metric output;
 
@@ -23,8 +22,7 @@ eks_audit_metric{audit_metric_type="four-zero-three-results"} 3.0
 ```
 
 ## Deployment and Configuration
-Soprano allows you to 
-define your custom queries like that if you want to run and fetch different kind of queries you can set them like that;
+In `values.yaml` file allows us to set queries shown as below;
 
 ```yaml
 queries:
@@ -37,7 +35,7 @@ These are example queries but you can set own queries in the `values.yaml` file,
 
 ### How to Deploy
 
-Soprano helm chart is located under the deploy/soprano directory and you are able to deploy it like that 
+Helm chart is located under the deploy/soprano directory and you are able to deploy it like that 
 
 ```
     helm upgrade -i [RELEASE-NAME] ./deploy/soprano  
@@ -47,9 +45,9 @@ You can populate the helm chart values like that.
 
 ### Caveats:
 
-* Soprano does not creates any prometheus rules for the alerting purposes you can set your prometheus rules according to the your query definitions.
+* This project does not creates any prometheus rules for the alerting purposes you can set your prometheus rules according to the your query definitions.
 
-* You can use soprano via aws EC2 IAM Profile but in kubernetes side you are able to annotate your service Account to  access AWS via well defined Roles.
+* In any kind place to use this project you have to set these permissions to the policy.
 
 - Example Role Definition:
 ```

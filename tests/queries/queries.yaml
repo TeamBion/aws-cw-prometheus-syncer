@@ -1,0 +1,7 @@
+queries:
+    #non-kubectl-access : fields @message, @userAgent | filter userAgent not like /kube/ | filter userAgent not like /go/ |filter userAgent not like /Prometheus/ | sort @timestamp desc | limit 1
+    four-zero-three-results : fields @timestamp, @message| filter responseStatus.code == "403"| sort @timestamp desc| limit 1
+    forbidden-decisions : fields @timestamp, @message| filter annotations.authorization.k8s.io/decision == "forbid"| sort @timestamp desc| limit 1
+    forbidden-users : fields @timestamp, @message| filter user.username == "forbid"| sort @timestamp desc| limit 1
+    exec-attemptions : fields @timestamp, @message| filter objectRef.subresource == "exec"| sort @timestamp desc| limit 1
+    namespace-delete : fields @timestamp, @message| filter requestObject.kind == "Namespace"| filter verb=="delete"| filter responseObject.status.conditions.2.message=="testimtest"| sort @timestamp desc| limit 1

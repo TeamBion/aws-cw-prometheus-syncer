@@ -73,6 +73,7 @@ tolerations: []
 
 affinity: {}
 
+metric_prefix: eks
 queries:
     #non-kubectl-access : fields @message, @userAgent | filter userAgent not like /kube/ | filter userAgent not like /go/ |filter userAgent not like /Prometheus/ | sort @timestamp desc | limit 1
     four-zero-three-results : fields @timestamp, @message| filter responseStatus.code == "403"| sort @timestamp desc| limit 1

@@ -9,9 +9,9 @@ from insights_queries.query import QueryRunner
 class Metrics:
     """Class of metric class"""
 
-    def __init__(self, log_group_name, region="eu-west-1",time_period=5):
+    def __init__(self, log_group_name, metric_prefix, region="eu-west-1",time_period=5):
         self.time_period = time_period
-        self.metric_values = Gauge("metric", "Metrics", ["metric_type"])
+        self.metric_values = Gauge("{}_metric".format(metric_prefix), "Metrics", ["metric_type"])
         self.query_obj = QueryRunner(region=region)
         self.log_group_name = "{}".format(log_group_name)
         self.parser = Parser()
@@ -57,11 +57,13 @@ def main():
     log_group_name=os.environ.get("LOG_GROUP_NAME" ,"/aws/eks/test-cluster/cluster") ## 
     region=os.environ.get("AWS_DEFAULT_REGION", "eu-west-1")
     interval_time_period=os.environ.get("INTERVAL_TIME_PERIOD", 10)
+    metric_prefix = os.environ.get("METRIC_PREFIX")
 
     app_metrics = Metrics(
         time_period = int(interval_time_period),
         region = region,
-        log_group_name = log_group_name
+        log_group_name = log_group_name,
+        metric_prefix = metric_prefix
     )
     start_http_server(exporter_port)
     app_metrics.run_metrics_loop()
