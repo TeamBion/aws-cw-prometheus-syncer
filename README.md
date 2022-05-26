@@ -90,3 +90,8 @@ The following table lists the configurable parameters of the Cloudwatch Exporter
 # TODO
 * Helm Operator for the loki (on premise usage)
 * ElasticSearch and Humio Support
+
+
+## Notice:
+
+To show respect to the James Gandolfini I keep the helm chart name as Soprano.
