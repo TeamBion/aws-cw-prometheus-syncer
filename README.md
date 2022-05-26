@@ -2,8 +2,6 @@
 
 # Cloudwatch Insight Prometheus Exporter
 
-<img src="./img/logo.png"></img>
-
 This is a project that is responsible to create Prometheus metrics according to the given cloudwatch metrics.
 
 Let's check the overall architecture diagram at below;
