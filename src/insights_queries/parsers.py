@@ -3,7 +3,8 @@ import yaml
 import logging
 class Parser(object):
     def __init__(self):
-        self.query_path = "/opt/query/queries.yaml"
+        QUERY_PATH = os.environ.get("QUERY_PATH", "/opt/query/queries.yaml")
+        self.query_path = QUERY_PATH
         self.query_map = []
 
     def parse_query_list(self):

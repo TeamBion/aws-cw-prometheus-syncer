@@ -1,4 +1,4 @@
-"""Prometheus exporter of Cloudwatch Audit logs main.py """
+"""Prometheus exporter of Cloudwatch Logs main.py """
 import os
 import time
 import logging
@@ -6,12 +6,12 @@ from prometheus_client import start_http_server, Gauge
 from insights_queries.parsers import Parser
 from insights_queries.query import QueryRunner
 
-class AuditMetrics:
-    """Class of audit class"""
+class Metrics:
+    """Class of metric class"""
 
     def __init__(self, log_group_name, region="eu-west-1",time_period=5):
         self.time_period = time_period
-        self.audit_values = Gauge("eks_audit_metric", "Audit Metrics", ["audit_metric_type"])
+        self.metric_values = Gauge("metric", "Metrics", ["metric_type"])
         self.query_obj = QueryRunner(region=region)
         self.log_group_name = "{}".format(log_group_name)
         self.parser = Parser()
@@ -46,20 +46,20 @@ class AuditMetrics:
             else:
                 logging.warning("Nothing to produce as a metric {}".format(metric))
 
-            self.audit_values.labels(audit_metric_type=metric[0]).set(metric_map[metric[0]])
+            self.metric_values.labels(metric_type=metric[0]).set(metric_map[metric[0]])
 
 def main():
     """Prometheus exporter main function"""
 
     logging.info("Exporter started")
-
+    
     exporter_port = int(os.getenv("EXPORTER_PORT", "9877"))
-    log_group_name=os.environ.get("LOG_GROUP_NAME" ,"/aws/eks/eu-test/cluster") ## 
+    log_group_name=os.environ.get("LOG_GROUP_NAME" ,"/aws/eks/test-cluster/cluster") ## 
     region=os.environ.get("AWS_DEFAULT_REGION", "eu-west-1")
     interval_time_period=os.environ.get("INTERVAL_TIME_PERIOD", 10)
 
-    app_metrics = AuditMetrics(
-        time_period = interval_time_period,
+    app_metrics = Metrics(
+        time_period = int(interval_time_period),
         region = region,
         log_group_name = log_group_name
     )
