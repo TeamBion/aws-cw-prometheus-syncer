@@ -2,53 +2,35 @@
 
 # Cloudwatch Insight Prometheus Exporter
 
-This is a project that is responsible to create Prometheus metrics according to the given cloudwatch metrics.
+CWInsightExporter allows to produce Prometheus compatible metrics according to the cloudwatch log insights queries.This exporter works as a prometheus exporter belongs to a query fetcher which works as a query broker.
 
-Let's check the overall architecture diagram at below;
+Some of the important metrics like EKS audit, controller-manager .. etc are only produces as a cloudwatch log group by AWS regarding to that we are not able to produce metrics directly with AWS CloudwatchMetrics or exporters.Therefore we developed this tool to fetch and produce Prometheus compatible metrics from cloudwatch logs with cloudwatch Insight queries.
 
-<img src="./img/soprano.png"></img>
+<b> Table of contents </b>
 
-The `/metrics` endpoint expose the metrics according to the prefix and cloudwatch logs.
+- [Getting started](#getting-started)
+  - [Deployment](#deploy)
+- [Configuration](#configuration)
 
-Example metric output;
+## Getting Started
 
-```
-eks_audit_metric{audit_metric_type="exec-attemptions"} 2.0
-eks_audit_metric{audit_metric_type="forbidden-decisions"} 1.0
-eks_audit_metric{audit_metric_type="forbidden-users"} 1.0
-eks_audit_metric{audit_metric_type="four-zero-three-results"} 3.0
-```
+* <a href="./deploy/soprano/values.yaml">Quick Start - EKS Audit logs</a>
 
-## Deployment and Configuration
-In `values.yaml` file allows us to set queries shown as below;
+## Deployment
 
-```yaml
-queries:
-    forbidden-decisions : fields @timestamp, @message| filter annotations.authorization.k8s.io/decision == "forbid"| sort @timestamp desc| limit 1
-    forbidden-users : fields @timestamp, @message| filter user.username == "forbid"| sort @timestamp desc| limit 1
-    exec-attemptions : fields @timestamp, @message| filter objectRef.subresource == "exec"| sort @timestamp desc| limit 1
+Helm chart is located in deploy/soprano directory and you can easily setup the helm chart shown at below.
+
+```sh
+  $ export BASE_PATH=$(PWD)/deploy/soprano
+  
+  $ helm upgrade -i aws-cw-prometheus-syncer ${BASE_PATH} -f ${BASE_PATH}/values.yaml
 ```
 
-These are example queries but you can set own queries in the `values.yaml` file, to adjust the <b>queries</b> variable.
+### Caveats 
+To make this tool able to fetch the results of the CloudwatchInsights queries you should make sure the permissions are setup true.
 
-### How to Deploy
-
-Helm chart is located under the deploy/soprano directory and you are able to deploy it like that 
-
-```
-    helm upgrade -i [RELEASE-NAME] ./deploy/soprano  
-```
-
-You can populate the helm chart values like that.
-
-### Caveats:
-
-* This project does not creates any prometheus rules for the alerting purposes you can set your prometheus rules according to the your query definitions.
-
-* In any kind place to use this project you have to set these permissions to the policy.
-
-- Example Role Definition:
-```
+### Permissions
+```json
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -69,29 +51,29 @@ You can populate the helm chart values like that.
 }
 ```
 
-### Helm Chart Values Table:
+This tools is also able to access AWS API via  IRSA [Recommended way] assumed way so basically you can setup the IRSA like that;
 
+```yaml
+serviceAccount:
+  create: true
+  annotations:
+    eks.amazonaws.com/role-arn: ROLE_ARN
+```
 
 ## Configuration
 
-The following table lists the configurable parameters of the Cloudwatch Exporter chart and their default values.
+You can check the helm configuration details overs there ; 
 
 | Parameter                         | Description                                                             | Default                     |
 | --------------------------------- | ----------------------------------------------------------------------- | --------------------------- |
 | `image.repository`                | Image                                                                   | `emirozbir/soprano
 | `eks.region`                | The aws region where you are working                                                                    | `eu-west-1
 | `eks.log_group_name`                | Log group address to work on                                                                    | `/aws/eks/test-cluster/cluster
-| `servicemonitor.prometheus_release_name`                |  Release name of the kube-prometheus stack                                                                     | `eu-west-1
+| `servicemonitor.exporter_key`                |  Release name of the kube-prometheus stack                                                                     | `eu-west-1
 | `servicemonitor.namespace`                | Prometheus operator namespace on                                                                   | `eu-west-1
 | `exporter.port`                | Exposed port value on                                                                   | `9877
 | `serviceAccount.annotations`                | Annocations for the IRSA usage or generic purpose staff on                                                                   | `eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/ROLE-FOR-SOPRANO"
 
-
-# TODO
-* Helm Operator for the loki (on premise usage)
-* ElasticSearch and Humio Support
-
-
-## Notice:
+<b>Important:</b>
 
 To show respect to the James Gandolfini I keep the helm chart name as Soprano.

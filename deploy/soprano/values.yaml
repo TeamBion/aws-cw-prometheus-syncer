@@ -30,7 +30,7 @@ eks:
 
 servicemonitor:
   create: true
-  prometheus_release_name: audit-cluster
+  exporter_key: audit-cluster
   namespace: monitoring
   
   

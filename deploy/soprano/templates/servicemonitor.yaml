@@ -3,8 +3,8 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    release: {{.Values.servicemonitor.prometheus_release_name}}
-  name: {{.Values.servicemonitor.prometheus_release_name}}-{{ include "soprano.fullname" . }}
+    release: {{.Values.servicemonitor.exporter_key}}
+  name: {{.Values.servicemonitor.exporter_key}}-{{ include "soprano.fullname" . }}
   namespace: {{.Values.servicemonitor.namespace}}
 spec:
   endpoints:
