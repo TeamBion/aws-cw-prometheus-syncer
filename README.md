@@ -6,7 +6,7 @@ CWInsightExporter allows to produce Prometheus compatible metrics according to t
 
 Some of the important metrics like EKS audit, controller-manager .. etc are only produces as a cloudwatch log group by AWS regarding to that we are not able to produce metrics directly with AWS CloudwatchMetrics or exporters.Therefore we developed this tool to fetch and produce Prometheus compatible metrics from cloudwatch logs with cloudwatch Insight queries.
 
-<img height="250" width="1000" src="./img/diagram.png"></img>
+<img height="350" width="1000" src="./img/diagram.png"></img>
 
 <b> Table of contents </b>
 
