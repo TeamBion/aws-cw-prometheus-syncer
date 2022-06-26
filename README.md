@@ -2,24 +2,21 @@
 
 # Cloudwatch Insight Prometheus Exporter
 
-CWInsightExporter allows to produce Prometheus compatible metrics according to the cloudwatch log insights queries.
+CWInsightExporter allows to produce Prometheus compatible metrics according to the cloudwatch log insights queries.This exporter works as a prometheus exporter belongs to a query fetcher which works as a query broker.
 
-Centralized monitoring is very useful to track system companents via single way.That approach brings single source of truth while monitoring, scaling and producing alerts.
-
+Some of the important metrics like EKS audit, controller-manager .. etc are only produces as a cloudwatch log group by AWS regarding to that we are not able to produce metrics directly with AWS CloudwatchMetrics or exporters.Therefore we developed this tool to fetch and produce Prometheus compatible metrics from cloudwatch logs with cloudwatch Insight queries.
 
 <b> Table of contents </b>
 
-* Getting started
-* Deploy
-* Configuration
-* RoadMap
-
+- [Getting started](#getting-started)
+  - [Deployment](#deploy)
+- [Configuration](#configuration)
 
 ## Getting Started
 
 * <a href="./deploy/soprano/values.yaml">Quick Start - EKS Audit logs</a>
 
-## Deploy
+## Deployment
 
 Helm chart is located in deploy/soprano directory and you can easily setup the helm chart shown at below.
 
@@ -63,6 +60,8 @@ serviceAccount:
     eks.amazonaws.com/role-arn: ROLE_ARN
 ```
 
+## Configuration
+
 You can check the helm configuration details overs there ; 
 
 | Parameter                         | Description                                                             | Default                     |
@@ -70,15 +69,10 @@ You can check the helm configuration details overs there ;
 | `image.repository`                | Image                                                                   | `emirozbir/soprano
 | `eks.region`                | The aws region where you are working                                                                    | `eu-west-1
 | `eks.log_group_name`                | Log group address to work on                                                                    | `/aws/eks/test-cluster/cluster
-| `servicemonitor.prometheus_release_name`                |  Release name of the kube-prometheus stack                                                                     | `eu-west-1
+| `servicemonitor.exporter_key`                |  Release name of the kube-prometheus stack                                                                     | `eu-west-1
 | `servicemonitor.namespace`                | Prometheus operator namespace on                                                                   | `eu-west-1
 | `exporter.port`                | Exposed port value on                                                                   | `9877
 | `serviceAccount.annotations`                | Annocations for the IRSA usage or generic purpose staff on                                                                   | `eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/ROLE-FOR-SOPRANO"
-
-# TO-DO
-
-* Helm Operator for the loki (on premise usage)
-* ElasticSearch and Humio Support
 
 <b>Important:</b>
 
