@@ -2,9 +2,12 @@
 
 # Cloudwatch Insight Prometheus Exporter
 
-CWInsightExporter allows to produce Prometheus compatible metrics according to the cloudwatch log insights queries.This exporter works as a prometheus exporter belongs to a query fetcher which works as a query broker.
+Cloudwatch Insight Prometheus Exporter allows you to generate Prometheus-compatible metrics using AWS Cloudwatch Log Insights.
 
-Some of the important metrics like EKS audit, controller-manager .. etc are only produces as a cloudwatch log group by AWS regarding to that we are not able to produce metrics directly with AWS CloudwatchMetrics or exporters.Therefore we developed this tool to fetch and produce Prometheus compatible metrics from cloudwatch logs with cloudwatch Insight queries.
+Many AWS services create logs that you can see in AWS Cloudwatch Logs, making generating metrics impossible. 
+
+To be able to generate metrics, we developed this Prometheus Exporter so we can generate metrics from Cloudwatch Logs using Cloudwatch Log Insights.
+
 
 <img height="350" width="1000" src="./img/diagram.png"></img>
 
